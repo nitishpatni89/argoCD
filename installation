@@ -1,3 +1,46 @@
+--> Install ArgoCLI on local machine to interact with your application
+
 $ wget https://github.com/argoproj/argo-cd/releases/download/v2.6.1/argocd-linux-amd64
 $ chmod +x argocd-linux-amd64
 $ mv argocd-linux-amd64 /usr/bin/argocd
+
+--> Install ArgoCD on kubernetes cluster so that application can be deploy automatically
+
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+watch -d kubectl get deployments -n argocd
+
+--> Get the First time password to login to argoCD UI 
+
+argocd admin initial-password -n argocd
+
+This password must be only used for first time login. We strongly recommend you update the password using `argocd account update-password`.
+
+Portforward to access the argoCD ui from browser (here 192.168.29.161 is ip address of the argocd server) 
+
+kubectl port-forward --address=192.168.29.161 svc/argocd-server -n argocd 8080:443
+
+--> Open the UI using 192.168.29.161:8080 and login with username admin and password we got from above 
+
+--> login to argocd CLI
+ argocd login 192.168.29.161:8080
+   enter username admin and password we got above 
+
+--> add cluster to argocd
+
+argocd cluster add example : argocd cluster add kubernetes-admin@kubernetes
+
+root@gitops:~/argocd# argocd cluster add kubernetes-admin@kubernetes
+WARNING: This will create a service account `argocd-manager` on the cluster referenced by context `kubernetes-admin@kubernetes` with full cluster level privileges. Do you want to continue [y/N]? y
+INFO[0007] ServiceAccount "argocd-manager" created in namespace "kube-system" 
+INFO[0007] ClusterRole "argocd-manager-role" created    
+INFO[0007] ClusterRoleBinding "argocd-manager-role-binding" created 
+INFO[0012] Created bearer token secret for ServiceAccount "argocd-manager" 
+Cluster 'https://192.168.29.161:6443' added
+
+
+ 
+
+
+
+
