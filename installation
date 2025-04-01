@@ -38,9 +38,42 @@ INFO[0007] ClusterRoleBinding "argocd-manager-role-binding" created
 INFO[0012] Created bearer token secret for ServiceAccount "argocd-manager" 
 Cluster 'https://192.168.29.161:6443' added
 
+--> clone your gitlab repo 
+
+git clone https://github.com/<username>/<repo>.git
+
+--> push your manifests file to gitlab
+
+$ git add .
+$ git commit -m "Added initial Kubernetes YAML files"
+$ git push
+
 --> add gitlab repo in argocd repository 
 
 argocd repo add https://gitlab.com/nitishpatni/argocd.git --username nitish.patni89@gmail.com --password Aatish@2023
+
+--> create a argocd app in default project and deploy the yaml file
+
+root@gitops:~/argocd# cat gitlab-argo2.yaml 
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-app-2
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://gitlab.com/nitishpatni/argocd.git'
+    path: . // this is your manifest file location //
+    targetRevision: dev-argo  // this is your branch name//
+  destination:
+    server: 'https://192.168.29.161:6443' // this is your k8s cluster //
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
 
 
  
