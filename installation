@@ -38,6 +38,10 @@ INFO[0007] ClusterRoleBinding "argocd-manager-role-binding" created
 INFO[0012] Created bearer token secret for ServiceAccount "argocd-manager" 
 Cluster 'https://192.168.29.161:6443' added
 
+--> add gitlab repo in argocd repository 
+
+argocd repo add https://gitlab.com/nitishpatni/argocd.git --username nitish.patni89@gmail.com --password Aatish@2023
+
 
  
 
